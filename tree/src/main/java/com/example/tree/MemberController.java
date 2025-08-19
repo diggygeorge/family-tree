@@ -4,8 +4,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
-@RequestMapping("api/members")
+@RequestMapping("api")
 public class MemberController {
 
     private final MemberService memberService;
@@ -14,17 +15,17 @@ public class MemberController {
         this.memberService = memberService;
     }
     
-    @GetMapping
+    @GetMapping("/members")
     public List<Member> getMembers() {
         return memberService.getMembers();
     }
 
-    @PostMapping
+    @PostMapping("/members")
     public void addMember(@RequestBody Member member) {
         memberService.insertMember(member);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/members")
     public void deleteMember(@RequestBody Member member) {
         memberService.deleteMember(member);
     }
