@@ -17,13 +17,13 @@ public class MemberService {
         return memberRepository.findAll();
     }
 
-    public void insertMember(Member member) {
+    public void saveMember(Member member) {
         memberRepository.save(member);
     }
 
-    public Member deleteMember(Member member) {
-        memberRepository.delete(member);
-        return member;
+    public Integer deleteMember(Integer id) {
+        memberRepository.deleteById(id);
+        return id;
     }
 
 }

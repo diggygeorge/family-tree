@@ -22,11 +22,16 @@ public class MemberController {
 
     @PostMapping("/members")
     public void addMember(@RequestBody Member member) {
-        memberService.insertMember(member);
+        memberService.saveMember(member);
     }
 
-    @DeleteMapping("/members")
-    public void deleteMember(@RequestBody Member member) {
-        memberService.deleteMember(member);
+    @PutMapping("/members")
+    public void updateMember(@RequestBody Member member) {
+        memberService.saveMember(member);
+    }
+
+    @DeleteMapping("/delete-member/{id}")
+    public void deleteMember(@PathVariable Integer id) {
+        memberService.deleteMember(id);
     }
 }
