@@ -15,17 +15,19 @@ try {
 }
 }
 
-export const saveMember = async (parentId: number | null, personName: string, treeName: string, update: boolean, id?: number) => {
+export const saveMember = async (parentId: number | null, personName: string, treeName: string, update: boolean, isRoot: boolean, birthDate?: string, deathDate?: string, prefix?: string, sex?: string, id?: number) => {
 try {
     let data = {
   "parentId": parentId,
   "treeName": treeName,
   "personName": personName,
-  "id": id
+  "id": id,
+  "isRoot": isRoot,
+  "birthDate": birthDate,
+  "deathDate": deathDate,
+  "prefix": prefix,
+  "sex": sex
 }
-    if (id) {
-        data.id = id
-    }
 
     const response = await fetch('http://localhost:8080/api/members', {
         method: update ? 'PUT' : 'POST',

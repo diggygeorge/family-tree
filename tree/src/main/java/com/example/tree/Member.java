@@ -13,18 +13,28 @@ public class Member {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer parent_id;
-    private String person_name;
-    private String tree_name;
+    private Integer parentId;
+    private boolean isRoot;
+    private String personName;
+    private String treeName;
+    private String birthDate;
+    private String deathDate;
+    private String prefix;
+    private String sex;
 
     public Member() {
     }
 
-    public Member(Integer id, Integer parent_id, String person_name, String tree_name) {
+    public Member(Integer id, Integer parentId, boolean isRoot, String personName, String treeName, String birthDate, String deathDate, String prefix, String sex) {
         this.id = id;
-        this.parent_id = parent_id;
-        this.person_name = person_name;
-        this.tree_name = tree_name;
+        this.parentId = parentId;
+        this.isRoot = isRoot;
+        this.personName = personName;
+        this.treeName = treeName;
+        this.birthDate = birthDate;
+        this.deathDate = deathDate;
+        this.prefix = prefix;
+        this.sex = sex;
     }
 
     public Integer getId() {
@@ -36,27 +46,67 @@ public class Member {
     }
 
     public Integer getParentId() {
-        return parent_id;
+        return parentId;
     }
 
     public void setParentId(Integer id) {
-        this.parent_id = id;
+        this.parentId = id;
+    }
+
+    public boolean getIsRoot() {
+        return isRoot;
+    }
+
+    public void setIsRoot(boolean isRoot) {
+        this.isRoot = isRoot;
     }
 
     public String getPersonName() {
-        return person_name;
+        return personName;
     }
 
     public void setPersonName(String person_name) {
-        this.person_name = person_name;
+        this.personName = person_name;
     }
 
     public String getTreeName() {
-        return tree_name;
+        return treeName;
     }
 
     public void setTreeName(String tree_name) {
-        this.tree_name = tree_name;
+        this.treeName = tree_name;
+    }
+
+    public String getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(String birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public String getDeathDate() {
+        return deathDate;
+    }
+
+    public void setDeathDate(String deathDate) {
+        this.deathDate = deathDate;
+    }
+
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
     }
 
     @Override
@@ -68,14 +118,19 @@ public class Member {
         Member that = (Member) o;
 
         return Objects.equals(id, that.id)
-        && Objects.equals(parent_id, that.parent_id)
-        && Objects.equals(person_name, that.person_name)
-        && Objects.equals(tree_name, that.tree_name);
+        && Objects.equals(parentId, that.parentId)
+        && Objects.equals(isRoot, that.isRoot)
+        && Objects.equals(personName, that.personName)
+        && Objects.equals(treeName, that.treeName)
+        && Objects.equals(birthDate, that.birthDate)
+        && Objects.equals(deathDate, that.deathDate)
+        && Objects.equals(prefix, that.prefix)
+        && Objects.equals(sex, that.sex);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, parent_id, person_name, tree_name);
+        return Objects.hash(id, parentId, isRoot, personName, treeName, birthDate, deathDate, prefix, sex);
     }
 
 }
