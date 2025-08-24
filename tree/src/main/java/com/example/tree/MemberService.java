@@ -31,12 +31,14 @@ public class MemberService {
         Member parent2 = new Member();
         parent2.setPersonName("Father of " + member.getPersonName());
         parent2.setSex("M");
+        
+        saveMember(parent1);
+        saveMember(parent2);
 
         member.addRelationship(parent1, "PARENT");
         member.addRelationship(parent2, "PARENT");
-
-        saveMember(parent1);
-        saveMember(parent2);
+        
+        saveMember(member);
     }
 
     public void addEx(Integer id) {
@@ -49,6 +51,7 @@ public class MemberService {
         member.addRelationship(ex, "EX");
 
         saveMember(ex);
+        saveMember(member);
 
     }
 
@@ -62,7 +65,8 @@ public class MemberService {
         member.addRelationship(spouse, "SPOUSE");
 
         saveMember(spouse);
-
+        saveMember(member);
+        
     }
 
     public void addChild(Integer id) {
@@ -76,6 +80,7 @@ public class MemberService {
         member.addRelationship(child, "CHILD");
 
         saveMember(child);
+        saveMember(member);
 
     }
 

@@ -2,6 +2,8 @@ package com.example.tree;
 
 import java.util.*;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,12 +20,13 @@ public class Relationship {
 
     @ManyToOne
     @JoinColumn(name = "from_id")
+    @JsonIdentityReference(alwaysAsId = true)
     private Member from;
 
     @ManyToOne
     @JoinColumn(name = "to_id")
+    @JsonIdentityReference(alwaysAsId = true)
     private Member to;
-    
     private String type;
 
     public Relationship() {
@@ -66,7 +69,8 @@ public class Relationship {
 
     public void setType(String type) {
         this.type = type;
-    }    
+    }
+    
 
     @Override
     public boolean equals(Object o) {

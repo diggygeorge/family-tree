@@ -2,12 +2,20 @@ package com.example.tree;
 
 import java.util.*;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
+@JsonIdentityInfo(
+    generator = ObjectIdGenerators.PropertyGenerator.class,
+    property = "id"
+)
 @Entity
 public class Member {
 
@@ -15,7 +23,7 @@ public class Member {
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToMany(mappedBy="from")
+    @OneToMany(mappedBy="from", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Relationship> relationships = new ArrayList<>();
 
     private boolean isRoot;
@@ -67,12 +75,17 @@ public class Member {
 
             case "PARENT":
                 r2.setType("CHILD");
+                break;
             case "CHILD":
                 r2.setType("PARENT");
+                break;
             default:
                 r2.setType(type);
                 break;
         }
+
+       this.relationships.add(r1);
+       other.relationships.add(r2);
     }
 
     public void removeRelationship(Relationship r) {
