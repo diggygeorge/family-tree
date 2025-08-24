@@ -20,9 +20,24 @@ public class MemberController {
         return memberService.getMembers();
     }
 
-    @PostMapping("/members")
-    public void addMember(@RequestBody Member member) {
-        memberService.saveMember(member);
+    @PostMapping("/members/{id}/parents")
+    public void addParents(@PathVariable Integer id) {
+        memberService.addParents(id);
+    }
+
+    @PostMapping("/members/{id}/ex")
+    public void addEx(@PathVariable Integer id) {
+        memberService.addEx(id);
+    }
+
+    @PostMapping("/members/{id}/spouse")
+    public void addSpouse(@PathVariable Integer id) {
+        memberService.addSpouse(id);
+    }
+
+    @PostMapping("/members/{id}/child")
+    public void addChild(@PathVariable Integer id) {
+        memberService.addChild(id);
     }
 
     @PutMapping("/members")
@@ -30,8 +45,8 @@ public class MemberController {
         memberService.saveMember(member);
     }
 
-    @DeleteMapping("/delete-member/{id}")
-    public void deleteMember(@PathVariable Integer id) {
-        memberService.deleteMember(id);
+    @DeleteMapping("/delete-member")
+    public void deleteMember(@RequestBody Member member) {
+        memberService.deleteMember(member);
     }
 }

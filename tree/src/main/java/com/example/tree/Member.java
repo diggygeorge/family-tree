@@ -1,11 +1,12 @@
 package com.example.tree;
 
-import java.util.Objects;
+import java.util.*;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Member {
@@ -13,7 +14,10 @@ public class Member {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer parentId;
+
+    @OneToMany(mappedBy="from")
+    private List<Relationship> relationships = new ArrayList<>();
+
     private boolean isRoot;
     private String personName;
     private String treeName;
@@ -25,9 +29,9 @@ public class Member {
     public Member() {
     }
 
-    public Member(Integer id, Integer parentId, boolean isRoot, String personName, String treeName, String birthDate, String deathDate, String prefix, String sex) {
+    public Member(Integer id, ArrayList<Relationship> relationships, boolean isRoot, String personName, String treeName, String birthDate, String deathDate, String prefix, String sex) {
         this.id = id;
-        this.parentId = parentId;
+        this.relationships = relationships;
         this.isRoot = isRoot;
         this.personName = personName;
         this.treeName = treeName;
@@ -45,12 +49,34 @@ public class Member {
         this.id = id;
     }
 
-    public Integer getParentId() {
-        return parentId;
+    public List<Relationship> getRelationships() {
+        return relationships;
     }
 
-    public void setParentId(Integer id) {
-        this.parentId = id;
+    public void addRelationship(Member other, String type) {
+        Relationship r1 = new Relationship();
+        r1.setFrom(this);
+        r1.setTo(other);
+        r1.setType(type);
+
+        Relationship r2 = new Relationship();
+        r2.setFrom(other);
+        r2.setTo(this);
+
+        switch (type) {
+
+            case "PARENT":
+                r2.setType("CHILD");
+            case "CHILD":
+                r2.setType("PARENT");
+            default:
+                r2.setType(type);
+                break;
+        }
+    }
+
+    public void removeRelationship(Relationship r) {
+        relationships.remove(r);
     }
 
     public boolean getIsRoot() {
@@ -109,6 +135,15 @@ public class Member {
         this.sex = sex;
     }
 
+    public boolean isMarried() {
+        for (Relationship relationship : relationships) {
+            if (relationship.getType() == "SPOUSE") {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) {
@@ -118,7 +153,7 @@ public class Member {
         Member that = (Member) o;
 
         return Objects.equals(id, that.id)
-        && Objects.equals(parentId, that.parentId)
+        && Objects.equals(relationships, that.relationships)
         && Objects.equals(isRoot, that.isRoot)
         && Objects.equals(personName, that.personName)
         && Objects.equals(treeName, that.treeName)
@@ -130,7 +165,7 @@ public class Member {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, parentId, isRoot, personName, treeName, birthDate, deathDate, prefix, sex);
+        return Objects.hash(id, relationships, isRoot, personName, treeName, birthDate, deathDate, prefix, sex);
     }
 
 }

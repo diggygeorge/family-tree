@@ -1,6 +1,6 @@
 package com.example.tree;
 
-import java.util.List;
+import java.util.*;
 
 import org.springframework.stereotype.Service;
 
@@ -21,9 +21,85 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    public Integer deleteMember(Integer id) {
-        memberRepository.deleteById(id);
-        return id;
+    public void addParents(Integer id) {
+        Member member = memberRepository.getReferenceById(id);
+
+        Member parent1 = new Member();
+        parent1.setPersonName("Mother of " + member.getPersonName());
+        parent1.setSex("F");
+
+        Member parent2 = new Member();
+        parent2.setPersonName("Father of " + member.getPersonName());
+        parent2.setSex("M");
+
+        member.addRelationship(parent1, "PARENT");
+        member.addRelationship(parent2, "PARENT");
+
+        saveMember(parent1);
+        saveMember(parent2);
+    }
+
+    public void addEx(Integer id) {
+
+        Member member = memberRepository.getReferenceById(id);
+
+        Member ex = new Member();
+        ex.setPersonName("Ex of " + member.getPersonName());
+
+        member.addRelationship(ex, "EX");
+
+        saveMember(ex);
+
+    }
+
+    public void addSpouse(Integer id) {
+
+        Member member = memberRepository.getReferenceById(id);
+
+        Member spouse = new Member();
+        spouse.setPersonName("Spouse of " + member.getPersonName());
+
+        member.addRelationship(spouse, "SPOUSE");
+
+        saveMember(spouse);
+
+    }
+
+    public void addChild(Integer id) {
+
+        Member member = memberRepository.getReferenceById(id);
+
+        Member child = new Member();
+
+        child.setPersonName("Child of " + member.getPersonName());
+
+        member.addRelationship(child, "CHILD");
+
+        saveMember(child);
+
+    }
+
+    public void deleteMember(Member member) {
+        // If no more spouses, delete children
+        if (member.isMarried()) {
+            for (Relationship r : member.getRelationships()) {
+                Member to = r.getTo();
+                member.removeRelationship(r);
+                for (Relationship r2 : to.getRelationships()) {
+                    if (r2.getTo().equals(member)) {
+                        to.removeRelationship(r2);
+                    }
+                }
+            }
+        }
+        else {
+            for (Relationship r : member.getRelationships()) {
+                if (r.getType() == "CHILD") {
+                    deleteMember(r.getTo());
+                }
+            }
+        }
+        memberRepository.delete(member);
     }
 
 }
