@@ -84,23 +84,21 @@ public class MemberService {
 
     }
 
-    public void deleteMember(Member member) {
-        // If no more spouses, delete children
-        if (member.isMarried()) {
-            for (Relationship r : member.getRelationships()) {
-                Member to = r.getTo();
-                member.removeRelationship(r);
-                for (Relationship r2 : to.getRelationships()) {
-                    if (r2.getTo().equals(member)) {
-                        to.removeRelationship(r2);
+    public void deleteMember(Integer id) {
+        // delete all relationships mentioning it first, then if there are members 
+        // with no more relationships, delete them entirely.  then delete member itself
+
+        Member member = memberRepository.getReferenceById(id);
+
+        for (Relationship r : new ArrayList<Relationship>(member.getRelationships())) {
+            Member receiving_member = r.getTo();
+            member.removeRelationship(r);
+            for (Relationship r2 : new ArrayList<Relationship>(receiving_member.getRelationships())) {
+                if (r2.getTo().equals(member)) {
+                    receiving_member.removeRelationship(r2);
+                    if (receiving_member.getRelationships().isEmpty()) {
+                        memberRepository.delete(receiving_member);
                     }
-                }
-            }
-        }
-        else {
-            for (Relationship r : member.getRelationships()) {
-                if (r.getType() == "CHILD") {
-                    deleteMember(r.getTo());
                 }
             }
         }

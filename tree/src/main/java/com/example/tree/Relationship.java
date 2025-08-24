@@ -2,6 +2,9 @@ package com.example.tree;
 
 import java.util.*;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 
 import jakarta.persistence.Entity;
@@ -21,11 +24,13 @@ public class Relationship {
     @ManyToOne
     @JoinColumn(name = "from_id")
     @JsonIdentityReference(alwaysAsId = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Member from;
 
     @ManyToOne
     @JoinColumn(name = "to_id")
     @JsonIdentityReference(alwaysAsId = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Member to;
     private String type;
 

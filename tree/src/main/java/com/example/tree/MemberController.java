@@ -45,8 +45,8 @@ public class MemberController {
         memberService.saveMember(member);
     }
 
-    @DeleteMapping("/delete-member")
-    public void deleteMember(@RequestBody Member member) {
-        memberService.deleteMember(member);
+    @DeleteMapping("/delete/{id}")
+    public void deleteMember(@PathVariable Integer id) {
+        memberService.deleteMember(id);
     }
 }
