@@ -1,4 +1,5 @@
 'use server'
+import type { Relationship } from "@/app/page"
 
 export const getMembers = async () => {
 try {
@@ -15,10 +16,11 @@ try {
 }
 }
 
-export const saveMember = async (parentId: number | null, personName: string, treeName: string, update: boolean, isRoot: boolean, birthDate?: string, deathDate?: string, prefix?: string, sex?: string, id?: number) => {
+export const saveMember = async (parentId: number | null, relationships: Relationship[], personName: string, treeName: string, isRoot: boolean, birthDate?: string, deathDate?: string, prefix?: string, sex?: string, id?: number) => {
 try {
     let data = {
   "parentId": parentId,
+  "relationships": relationships,
   "treeName": treeName,
   "personName": personName,
   "id": id,
@@ -30,7 +32,7 @@ try {
 }
 
     const response = await fetch('http://localhost:8080/api/members', {
-        method: update ? 'PUT' : 'POST',
+        method: 'PUT',
         headers: {
                     'Content-Type': "application/json"
                  },
@@ -50,7 +52,7 @@ try {
 
 export const deleteMember = async (id: number) => {
 try {
-    const response = await fetch(`http://localhost:8080/api/delete-member/${id}`, {
+    const response = await fetch(`http://localhost:8080/api/delete/${id}`, {
         method: 'DELETE',
       })
     if (!response.ok) {
@@ -65,4 +67,22 @@ catch (error) {
     console.error('Error deleting member:', error)
     throw error
 }
+}
+
+export const addRelation = async (id: number | null, relation: string) => {
+    try {
+        const response = await fetch(`http://localhost:8080/api/members/${id}/${relation}`, {
+            method: 'POST'
+        })
+        if (!response.ok) {
+            console.error("Error:", response.status, response.statusText)
+        }
+
+        const text = await response.text()
+        const result = text ? JSON.parse(text) : null
+        return result
+    } catch (error) {
+        console.error('Error adding member:', error)
+        throw error
+    }
 }

@@ -2,8 +2,16 @@
 import * as actions from '../actions';
 import { useState, useEffect } from 'react'
 
+export type Relationship = {
+  id: number,
+  from: Member,
+  to: Member,
+  type: string
+}
+
 interface Member {
    id: number,
+   relationships: Relationship[],
    parentId: number,
    isRoot: boolean,
    personName: string,
@@ -37,29 +45,28 @@ export default function Home() {
 
   useEffect(() => {
     fetchData();
-  }, [actions.deleteMember, actions.saveMember]);
+  }, [actions.deleteMember, actions.saveMember, actions.addRelation]);
 
   return (
     <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
         <p>Members:</p>
         {members.map((member) => (
-          <>
-            <p className="border-2 border-white" onClick={() => setSelectedId(member.id)}key={member.id}>{member.personName}</p>
+          <div key={member.id}>
+            <p className="border-2 border-white" onClick={() => setSelectedId(member.id)}>{member.personName}</p>
             <label>Update New Name:</label>
             <input onChange={(e) => setNewName(e.target.value)}></input>
-            <button onClick={() => actions.saveMember(member.parentId, newName, member.treeName, true, member.isRoot, newBirthDate, newDeathDate, newPrefix, newSex, member.id)}>Update</button>
+            <button onClick={() => actions.saveMember(member.parentId, member.relationships, newName, member.treeName, member.isRoot, newBirthDate, newDeathDate, newPrefix, newSex, member.id)}>Update</button>
             <button onClick={() => actions.deleteMember(member.id)}>Delete</button>
-          </>
+          </div>
         ))}
         <p>Number of Members: {members.length}</p>
-        <div>
-          <label>Name:</label>
-          <input onChange={(e) => setName(e.target.value)}/>
+        <div className="flex flex-col">
+          <button onClick={() => actions.addRelation(selectedId, "parents")}>Add Parents</button>
+          <button onClick={() => actions.addRelation(selectedId, "child")}>Add Child</button>
+          <button onClick={() => actions.addRelation(selectedId, "ex")}>Add Ex</button>
+          <button onClick={() => actions.addRelation(selectedId, "spouse")}>Add Spouse</button>
         </div>
-        <p>Selected Id: {selectedId ? selectedId : "None"}</p>
-        <button onClick={() => actions.saveMember(selectedId, name, "Ammanathu", false, members.length > 0 ? true : false, birthDate, deathDate, prefix, sex)}>Add Member</button>
-
       </main>
     </div>
   );
