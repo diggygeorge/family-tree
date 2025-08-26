@@ -75,11 +75,26 @@ public class MemberService {
 
         Member child = new Member();
 
-        child.setPersonName("Child of " + member.getPersonName());
-
         member.addRelationship(child, "CHILD");
 
-        saveMember(child);
+        // if exists a spouse or ex, add relation to that as well.  otherwise, there is no need to add a relation.
+
+        Member spouse = member.findSpouse();
+        System.out.println(spouse);
+        String newName = "Child of " + member.getPersonName();
+        if (spouse != null) {
+            spouse.addRelationship(child, "CHILD");
+            newName += " and " + spouse.getPersonName();
+            child.setPersonName(newName);
+            saveMember(child);
+            saveMember(spouse);
+            
+        }
+        else {
+            child.setPersonName(newName);
+            saveMember(child);
+        }        
+        
         saveMember(member);
 
     }

@@ -148,13 +148,13 @@ public class Member {
         this.sex = sex;
     }
 
-    public boolean isMarried() {
+    public Member findSpouse() {
         for (Relationship relationship : relationships) {
-            if (relationship.getType() == "SPOUSE") {
-                return true;
+            if (relationship.getType().equals("SPOUSE")) {
+                return relationship.getTo();
             }
         }
-        return false;
+        return null;
     }
 
     @Override

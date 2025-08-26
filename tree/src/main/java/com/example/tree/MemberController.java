@@ -45,6 +45,11 @@ public class MemberController {
         memberService.saveMember(member);
     }
 
+    @PostMapping("/members")
+    public void addRoot(@RequestBody Member member) {
+        memberService.saveMember(member);
+    }
+
     @DeleteMapping("/delete/{id}")
     public void deleteMember(@PathVariable Integer id) {
         memberService.deleteMember(id);
