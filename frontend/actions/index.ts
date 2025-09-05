@@ -16,6 +16,21 @@ try {
 }
 }
 
+export const getRelationships = async () => {
+try {
+    const response = await fetch('http://localhost:8080/api/relationships',{
+        method: 'GET',
+      })
+    if (!response.ok) {
+        throw new Error('Failed to fetch relationships')
+    }
+    return response.json()
+} catch (error) {
+    console.error('Error fetching getRelationships:', error)
+    throw error
+}
+}
+
 export const saveMember = async (parentId: number | null, relationships: Relationship[], personName: string, treeName: string, isRoot: boolean, birthDate?: string, deathDate?: string, prefix?: string, sex?: string, id?: number) => {
 try {
     let data = {

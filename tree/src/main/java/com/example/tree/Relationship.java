@@ -25,23 +25,21 @@ public class Relationship {
     @JoinColumn(name = "from_id")
     @JsonIdentityReference(alwaysAsId = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private Member from;
+    private Node from;
 
     @ManyToOne
     @JoinColumn(name = "to_id")
     @JsonIdentityReference(alwaysAsId = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private Member to;
-    private String type;
+    private Node to;
 
     public Relationship() {
     }
 
-    public Relationship(Integer id, Member from, Member to, String type) {
+    public Relationship(Integer id, Node from, Node to) {
         this.id = id;
         this.from = from;
         this.to = to;
-        this.type = type;
     }
 
     public Integer getId() {
@@ -52,28 +50,20 @@ public class Relationship {
         this.id = id;
     }
 
-    public Member getFrom() {
+    public Node getFrom() {
         return from;
     }
 
-    public void setFrom(Member from) {
+    public void setFrom(Node from) {
         this.from = from;
     }
 
-    public Member getTo() {
+    public Node getTo() {
         return to;
     }
 
-    public void setTo(Member to) {
+    public void setTo(Node to) {
         this.to = to;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
     
 
@@ -87,13 +77,12 @@ public class Relationship {
 
         return Objects.equals(id, that.id)
         && Objects.equals(from, that.from)
-        && Objects.equals(to, that.to)
-        && Objects.equals(type, that.type);
+        && Objects.equals(to, that.to);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, from, to, type);
+        return Objects.hash(id, from, to);
     }
 
 }
