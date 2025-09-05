@@ -1,17 +1,17 @@
 'use server'
 import type { Relationship } from "@/app/page"
 
-export const getMembers = async () => {
+export const getNodes = async () => {
 try {
-    const response = await fetch('http://localhost:8080/api/members',{
+    const response = await fetch('http://localhost:8080/api/nodes',{
         method: 'GET',
       })
     if (!response.ok) {
-        throw new Error('Failed to fetch members')
+        throw new Error('Failed to fetch nodes')
     }
     return response.json()
 } catch (error) {
-    console.error('Error fetching getMembers:', error)
+    console.error('Error fetching getNodes:', error)
     throw error
 }
 }
@@ -31,23 +31,40 @@ try {
 }
 }
 
-export const saveMember = async (parentId: number | null, relationships: Relationship[], personName: string, treeName: string, isRoot: boolean, birthDate?: string, deathDate?: string, prefix?: string, sex?: string, id?: number) => {
+export const addChild = async (id: number) => {
+    if (!id) {
+        throw new Error("ID cannot be null!")
+    }
+    try {
+        const response = await fetch(`http://localhost:8080/api/nodes/${id}child`, {
+            method: 'POST',
+            headers: {
+                'Content-type': "application/json"
+            },
+        })
+        if (!response.ok) {
+        console.error("Error:", response.status, response.statusText)
+    }
+    const text = await response.text()
+    const result = text ? JSON.parse(text) : null
+    return result
+} catch (error) {
+    console.error('Error adding member:', error)
+    throw error
+}
+    }
+
+export const saveNode = async (relationships: Relationship[], title: string, description: string, update: boolean, id?: number) => {
 try {
     let data = {
-  "parentId": parentId,
   "relationships": relationships,
-  "treeName": treeName,
-  "personName": personName,
+  "treeName": title,
+  "personName": description,
   "id": id,
-  "isRoot": isRoot,
-  "birthDate": birthDate,
-  "deathDate": deathDate,
-  "prefix": prefix,
-  "sex": sex
 }
 
-    const response = await fetch('http://localhost:8080/api/members', {
-        method: 'PUT',
+    const response = await fetch('http://localhost:8080/api/nodes', {
+        method: update ? 'PUT' : 'POST',
         headers: {
                     'Content-Type': "application/json"
                  },
@@ -65,9 +82,12 @@ try {
 }
 }
 
-export const deleteMember = async (id: number) => {
+export const deleteNode = async (id: number) => {
+    if (!id) {
+        throw new Error("ID cannot be null!")
+    }
 try {
-    const response = await fetch(`http://localhost:8080/api/delete/${id}`, {
+    const response = await fetch(`http://localhost:8080/api/nodes/delete/${id}`, {
         method: 'DELETE',
       })
     if (!response.ok) {
@@ -84,10 +104,35 @@ catch (error) {
 }
 }
 
-export const addRelation = async (id: number | null, relation: string) => {
+export const addConnection = async (id: number | null, other: number | null) => {
+    if (!id || !other) {
+        throw new Error("ID cannot be null!")
+    }
     try {
-        const response = await fetch(`http://localhost:8080/api/members/${id}/${relation}`, {
-            method: 'POST'
+        const response = await fetch(`http://localhost:8080/api/nodes/${id}/connect/${other}`, {
+            method: 'PUT'
+        })
+        if (!response.ok) {
+            console.error("Error:", response.status, response.statusText)
+        }
+
+        const text = await response.text()
+        const result = text ? JSON.parse(text) : null
+        return result
+    } catch (error) {
+        console.error('Error adding member:', error)
+        throw error
+    }
+}
+
+export const deleteConnection = async (id: number | null, other: number | null) => {
+    if (!id || !other) {
+        throw new Error("ID cannot be null!")
+    }
+
+    try {
+        const response = await fetch(`http://localhost:8080/api/nodes/delete/${id}/connect/${other}`, {
+            method: 'DELETE'
         })
         if (!response.ok) {
             console.error("Error:", response.status, response.statusText)

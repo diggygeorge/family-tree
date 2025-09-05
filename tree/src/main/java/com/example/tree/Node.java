@@ -26,17 +26,15 @@ public class Node {
     @OneToMany(mappedBy="from", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Relationship> relationships = new ArrayList<>();
 
-    private boolean isRoot;
     private String title;
     private String description;
 
     public Node() {
     }
 
-    public Node(Integer id, ArrayList<Relationship> relationships, boolean isRoot, String title, String description) {
+    public Node(Integer id, ArrayList<Relationship> relationships, String title, String description) {
         this.id = id;
         this.relationships = relationships;
-        this.isRoot = isRoot;
         this.title = title;
         this.description = description;
         // this.image = image (later on)
@@ -59,25 +57,25 @@ public class Node {
         r1.setFrom(this);
         r1.setTo(other);
 
-        Relationship r2 = new Relationship();
-        r2.setFrom(other);
-        r2.setTo(this);
-
-
        this.relationships.add(r1);
-       other.relationships.add(r2);
     }
 
     public void removeRelationship(Relationship r) {
         relationships.remove(r);
     }
 
-    public boolean getIsRoot() {
-        return isRoot;
-    }
-
-    public void setIsRoot(boolean isRoot) {
-        this.isRoot = isRoot;
+    public boolean hasRelationship(Node other) {
+        Node receiving_node = other;
+        for (Relationship r : new ArrayList<Relationship>(relationships)) {
+            if (r.getTo().getId() == receiving_node.getId()) {
+                System.out.println("Has relationship");
+                return true;
+            }
+            else {
+            System.out.println("No relationship");
+            }
+        }
+        return false;
     }
 
     public String getTitle() {
@@ -106,7 +104,6 @@ public class Node {
 
         return Objects.equals(id, that.id)
         && Objects.equals(relationships, that.relationships)
-        && Objects.equals(isRoot, that.isRoot)
         && Objects.equals(title, that.title)
         && Objects.equals(description, that.description);
         
@@ -114,7 +111,7 @@ public class Node {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, relationships, isRoot, title, description);
+        return Objects.hash(id, relationships, title, description);
     }
 
 }

@@ -21,17 +21,49 @@ public class NodeService {
         NodeRepository.save(Node);
     }
 
-    public void addNode(Integer id) {
+    public void addNode(Node Node) {
+        NodeRepository.save(Node);
+    }
 
-        Node Node = NodeRepository.getReferenceById(id);
+    public void addChild(Integer id) {
+
+        Node node = NodeRepository.getReferenceById(id);
         Node child = new Node();
 
-        Node.addRelationship(child);
-        String newName = "Connection to " + Node.getTitle();
+        node.addRelationship(child);
+        String newName = "Connection to " + node.getTitle();
         child.setTitle(newName);
         saveNode(child);         
-        saveNode(Node);
+        saveNode(node);
+    }
 
+    public void addConnection(Integer id, Integer other) {
+
+        Node from = NodeRepository.getReferenceById(id);
+        Node to = NodeRepository.getReferenceById(other);
+
+        if (!from.hasRelationship(to)) {
+            System.out.println("From does not have a connection with to");
+            from.addRelationship(to);
+            saveNode(from);
+            saveNode(to);
+        }
+    }
+
+    public void removeConnection(Integer id, Integer other) {
+
+        Node from = NodeRepository.getReferenceById(id);
+        Node to = NodeRepository.getReferenceById(other);
+
+        for (Relationship r : new ArrayList<Relationship>(from.getRelationships())) {
+            if (r.getTo().getId() == to.getId()) {
+                from.removeRelationship(r);
+                break;
+            }
+        }
+
+        saveNode(from);
+        saveNode(to);
     }
 
     public void deleteNode(Integer id) {
